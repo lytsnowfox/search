@@ -14,6 +14,7 @@ import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.Sum;
 import org.elasticsearch.search.aggregations.metrics.SumAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -95,11 +96,16 @@ public class ESClient_Search extends ESClient {
     }
 
 
-    public Map<Object,Long> testComplexAgr() {
+    public Map<Object,Double> testComplexAgr() {
         SearchRequest request = new SearchRequest();
         SearchSourceBuilder builder = new SearchSourceBuilder();
         // 定义一个聚合，包括名称和聚合字段
-        TermsAggregationBuilder nameAgr = AggregationBuilders.terms("by_name").field("name");
+        /* name.keyword解決以下异常：
+            Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default.
+            Set fielddata=true on [name] in order to load fielddata in memory by uninverting the inverted index.
+            Note that this can however use significant memory. Alternatively use a keyword field instead.]
+         */
+        TermsAggregationBuilder nameAgr = AggregationBuilders.terms("by_name").field("name.keyword");
         // 设置子聚合
         SumAggregationBuilder sumAgr = AggregationBuilders.sum("by_score").field("score");
         nameAgr.subAggregation(sumAgr);
@@ -112,10 +118,11 @@ public class ESClient_Search extends ESClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Terms terms = searchResponse.getAggregations().get("by_age");
-        Map<Object, Long> result = new HashMap<>();
+        Terms terms = searchResponse.getAggregations().get("by_name");
+        Map<Object, Double> result = new HashMap<>();
         for (Terms.Bucket entry : terms.getBuckets()) {
-            result.put(entry.getKey(), entry.getDocCount());
+            Sum sum = entry.getAggregations().get("by_score");
+            result.put(entry.getKey(), sum.getValue());
         }
         return result;
     }

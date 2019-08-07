@@ -76,7 +76,7 @@ public class SearchController {
     }
 
     @RequestMapping("/testComplexAgr")
-    public Map<Object, Long> testComplexAgr() {
+    public Map<Object, Double> testComplexAgr() {
         ESClient_Search client = new ESClient_Search();
         return client.testComplexAgr();
     }
