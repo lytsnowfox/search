@@ -69,6 +69,12 @@ public class SearchController {
         return true;
     }
 
+    @RequestMapping("/multiIndexSearch")
+    public Map<String, Object> multiIndexSearch() {
+        ESClient_Search client = new ESClient_Search();
+        return client.multiIndexSearch();
+    }
+
     @RequestMapping("/testAggregation")
     public Map<Object, Long> testAggregation() {
         ESClient_Search client = new ESClient_Search();

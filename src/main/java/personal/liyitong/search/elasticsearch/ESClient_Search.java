@@ -73,6 +73,28 @@ public class ESClient_Search extends ESClient {
         }
     }
 
+    public Map<String, Object> multiIndexSearch() {
+        Map<String, Object> result = new HashMap<>();
+        SearchRequest request = new SearchRequest();
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        builder.query(QueryBuilders.matchAllQuery());
+        request.indices("posts", "posts2");
+        //request.indices("posts*");
+        request.source(builder);
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = client.search(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] hits = searchHits.getHits();
+        for (SearchHit hit: hits) {
+            result.put(hit.getId(), hit.getSourceAsString());
+        }
+        return result;
+    }
+
     public Map<Object, Long> testAggregation() {
         SearchRequest request = new SearchRequest();
         SearchSourceBuilder builder = new SearchSourceBuilder();

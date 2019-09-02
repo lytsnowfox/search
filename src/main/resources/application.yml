@@ -13,3 +13,11 @@ spring:
       uri: bolt://192.168.30.130:7687
       username: neo4j
       password: letmein
+mybatis:
+  type-aliases-package: personal.liyitong.search.pojo
+#分页插件
+pagehelper:
+  helper-dialect: mysql
+  params: count=countSql
+  reasonable: true
+  support-methods-arguments: true

@@ -25,7 +25,7 @@ public class ESClient {
     public ESClient() {
         client = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("192.168.30.130", 9200, "http")));
+                        new HttpHost("192.168.30.131", 9200, "http")));
     }
 
     public boolean testConnect() {
