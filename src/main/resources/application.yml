@@ -1,23 +1,12 @@
 server:
   port: 8090
-  servlet:
-    context-path: /search
+
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/lytdata?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
-    username: liyitong
-    password: liyitong
-    driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     neo4j:
-      uri: bolt://192.168.30.130:7687
+      uri: bolt://192.168.30.131:7687
       username: neo4j
-      password: letmein
-mybatis:
-  type-aliases-package: personal.liyitong.search.pojo
-#分页插件
-pagehelper:
-  helper-dialect: mysql
-  params: count=countSql
-  reasonable: true
-  support-methods-arguments: true
+      password: 123456
+  elasticsearch:
+    rest:
+      uris: ["http://192.168.30.131:9200", "http://192.168.30.132:9200"]
